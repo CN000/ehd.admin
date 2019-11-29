@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehd.admin.address.mapper.AddressMapper" >
+    <resultMap id="Address" type="com.ehd.admin.address.domain.Address">
+        <id property="id" column="id"/>
+        <result property="address" column="star_address"/>
+        <result property="value" column="value"/>
+        <result property="status" column="status"/>
+        <result property="pass" column="star_pass"/>
+        <result property="privateKey" column="private_key"/>
+        <result property="publicKey" column="public_key"/>
+    </resultMap>
+    <select id="getPrivateKeyByAddress" resultMap="Address">
+        select * from ehd_sys_lock_address where star_address  = #{address}
+    </select>
+
+</mapper>

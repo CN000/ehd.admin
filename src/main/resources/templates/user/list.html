@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include("/main/css.html"){} %>
+</head>
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <!-- menu  -->
+        <% include("/main/menu.html"){} %>
+        <!-- /menu  -->
+        <!-- top navigation -->
+        <% include("/main/top.html"){} %>
+        <!-- /top navigation -->
+        <!-- page content -->
+        <div class="right_col" role="main">
+            <div class="">
+                <!--搜索框-->
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3><small>用户列表</small></h3>
+                        <div>注册时间：从<input type="date">到<input type="date">  用户名：<input type="search"></div>
+                        <div></div>
+                    </div>
+                </div>
+                <!--搜索框-->
+                <div class="clearfix"></div>
+                <div class="row" style="display: block;">
+                    <div class="clearfix"></div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 col-sm-12  ">
+                        <div class="x_panel">
+<!--                            <div class="x_title">-->
+<!--                                <h2>Table design <small>Custom design</small></h2>-->
+<!--                                <ul class="nav navbar-right panel_toolbox">-->
+<!--                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>-->
+<!--                                    </li>-->
+<!--                                    <li class="dropdown">-->
+<!--                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>-->
+<!--                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                                            <a class="dropdown-item" href="#">Settings 1</a>-->
+<!--                                            <a class="dropdown-item" href="#">Settings 2</a>-->
+<!--                                        </div>-->
+<!--                                    </li>-->
+<!--                                    <li><a class="close-link"><i class="fa fa-close"></i></a>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                                <div class="clearfix"></div>-->
+<!--                            </div>-->
+                            <div class="x_content">
+<!--                                <p>Add class <code>bulk_action</code> to table for bulk actions options on row select</p>-->
+                                <div class="table-responsive">
+                                    <table class="table table-striped jambo_table bulk_action">
+                                        <thead>
+                                        <tr class="headings">
+                                            <th>
+                                                <input type="checkbox" id="check-all" class="flat">
+                                            </th>
+                                            <th class="column-title">用户账号 </th>
+                                            <th class="column-title">手机号 </th>
+                                            <th class="column-title">账户资金 </th>
+                                            <th class="column-title">流动 </th>
+                                            <th class="column-title">锁定奖励</th>
+                                            <th class="column-title">用户状态</th>
+                                            <th class="column-title a-right ">注册时间</th>
+                                            <th class="column-title no-link last"><span class="nobr">Action</span>
+                                            </th>
+                                            <th class="bulk-actions" colspan="7">
+                                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                                            </th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <% for(user in frontUserList){ %>
+                                        <tr class="even pointer">
+                                            <td class="a-center ">
+                                                <input type="checkbox"  class="flat" name="table_records">
+                                            </td>
+                                            <td class=" ">${user.userPhone}</td>
+                                            <td class=" ">${user.mobile==null?"":user.mobile}</td>
+                                            <td class=" ">${user.ehd}</td>
+                                            <td class=" ">${user.flowEhd}</td>
+                                            <td class=" ">${user.lockEhd}</td>
+                                            <td class=" ">
+                                                <% if(user.userState=='Y'){ %>
+                                                <i style="color: #00cc00">正常</i>
+                                                <% }else{ %>
+                                                <i style="color: red ">冻结</i>
+                                                <% } %>
+                                            </td>
+                                            <td class="">${user.regTime}</td>
+                                            <td class=" last">
+                                                <% if(user.userState=='Y'){ %>
+                                                <a href="javascript:void(0);" class="cStatus" data-cid="" data-status="1" >冻结</a>
+                                                <% }else{ %>
+                                                <a href="javascript:void(0);" class="cStatus" data-cid="" data-status="1" >解冻</a>
+                                                <% } %>
+
+                                                <a href="javascript:void(0);" class="cStatus" data-cid="" data-status="-1">拒绝</a>
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--分页-->
+                                <div class="dataTables_paginate paging_simple_numbers" id="datatable_paginate">
+                                    <ul class="pagination">
+                                        <li class="paginate_button previous disabled" id="datatable_previous"><a href="#" aria-controls="datatable" data-dt-idx="0" tabindex="0">Previous</a></li>
+                                        <li class="paginate_button active"><a href="#" aria-controls="datatable" data-dt-idx="1" tabindex="0">1</a></li>
+                                        <li class="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="2" tabindex="0">2</a></li>
+                                        <li class="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="3" tabindex="0">3</a></li>
+                                        <li class="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="4" tabindex="0">4</a></li>
+                                        <li class="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="5" tabindex="0">5</a></li>
+                                        <li class="paginate_button "><a href="#" aria-controls="datatable" data-dt-idx="6" tabindex="0">6</a></li>
+                                        <li class="paginate_button next" id="datatable_next"><a href="#" aria-controls="datatable" data-dt-idx="7" tabindex="0">Next</a></li>
+                                    </ul>
+                                </div>
+                                <!--分页-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page content -->
+        <!-- footer content -->
+        <% include("/main/footer.html"){} %>
+        <!-- /footer content -->
+    </div>
+</div>
+ <% include("/main/js.html"){} %>
+</body>
+<script type="text/javascript">
+    function clear(str) {
+        str = str.replace(/,/g, "");//取消字符串中出现的所有逗号
+        return str;
+    }
+    // $(".cStatus").click(function () {
+    //     var status = $(this).attr("data-status");
+    //     var cashId = clear($(this).attr("data-cid"));
+    //     $.ajax({
+    //         type : "POST",
+    //         url : '/withdraw/notifyStatus',
+    //         dataType : "json",
+    //         data : {
+    //             'status':status,
+    //             'cashId':cashId
+    //         },
+    //         success:function(data){
+    //             window.location.reload();
+    //         }
+    //     })
+    // })
+</script>
+</html>

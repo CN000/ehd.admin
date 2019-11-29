@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehd.admin.log.mapper.RewardLogMapper" >
+    <resultMap id="ReWardLogResult" type="com.ehd.admin.log.domain.RewardLog">
+        <id property="liuShuiId" column="liushui_id"/>
+        <result property="liuShuiNo" column="liushui_no"/>
+        <result property="assetsBefrom" column="assets_befrom"/>
+        <result property="assetsAfter" column="assets_after"/>
+        <result property="assetsChange" column="assets_change"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="type" column="type"/>
+        <result property="cteateTime" column="create_time"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+    <insert id="addLockEHDLiuShuiLog">
+        insert into lock_ehd_liushui_log(liushui_no,assets_befrom,assets_after,assets_change,type,create_time,user_id)
+		values
+		(#{liushuiNo},#{assetsBefrom},#{assetsAfter},#{assetsChange},#{type},NOW(),#{userId})
+    </insert>
+    <insert id="insertLiushuiLog">
+        insert into lock_ehd_liushui_log(liushui_no,assets_befrom,assets_after,assets_change,type,create_time,user_id)
+		values
+        <foreach collection="logList" item="emp" separator=",">
+            (#{emp.liushuiNo},#{emp.assetsBefrom},#{emp.assetsAfter},#{emp.assetsChange},#{emp.type},NOW(),#{emp.userId})
+        </foreach>
+    </insert>
+
+</mapper>

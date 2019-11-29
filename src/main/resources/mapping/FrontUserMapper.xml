@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehd.admin.user.mapper.FrontUserMapper" >
+    <resultMap id="FrontUser" type="com.ehd.admin.user.domain.FrontUser">
+        <id column="user_id" property="userId"/>
+        <result column="user_phone" property="userPhone"/>
+        <result column="mobile" property="mobile"/>
+        <result column="mobile_verified" property="mobileVerified"/>
+        <result column="children_ids" property="childrenIds"/>
+        <result column="children_ids_all" property="childrenIdsAll"/>
+        <result column="ehd" property="ehd"/>
+        <result column="lock_ehd" property="lockEhd"/>
+        <result column="static_ehd" property="staticEhd"/>
+        <result column="flow_ehd" property="flowEhd"/>
+        <result column="hdb" property="hdb"/>
+        <result column="ehd_wallet" property="ehdWallet"/>
+        <result column="hdb_wallet" property="hdbWallet"/>
+        <result column="user_pass" property="userPass"/>
+        <result column="user_pay_pass" property="userPayPass"/>
+        <result column="user_code" property="userCode"/>
+        <result column="head_poratil" property="headPoratil"/>
+        <result column="team_achieve" property="teamAchieve"/>
+        <result column="team_num" property="teamNum"/>
+        <result column="zhitui_num" property="zhituiNum"/>
+        <result column="user_pid" property="userPid"/>
+        <result column="pid_list" property="pidList"/>
+        <result column="daishu_num" property="daishuNum"/>
+        <result column="user_level" property="userLevel"/>
+        <result column="total_profit" property="totalProfit"/>
+        <result column="activation" property="activation"/>
+        <result column="day_num" property="dayNum"/>
+        <result column="reg_time" property="regTime"/>
+        <result column="user_state" property="userState"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="type" property="type"/>
+        <result column="today_priot" property="todayPriot"/>
+        <result column="days" property="days"/>
+        <result column="ishdb" property="ishdb"/>
+        <result column="is_bd" property="isBd"/>
+        <result column="private_key" property="privateKey"/>
+        <result column="public_key" property="publicKey"/>
+    </resultMap>
+
+    <update id="backEHD" >
+        update front_user set ehd = ehd + ${cashNum} where user_id = #{cashUser}
+    </update>
+    <select id="getFrontUserByUserId" resultMap="FrontUser">
+        select a.user_id,a.user_phone,a.ehd_wallet,b.private_key,b.public_key from front_user a left join ehd_sys_lock_address b
+        on a.ehd_wallet = b.star_address where a.user_id = #{userId}
+    </select>
+    <select id="searchUserForSettle" resultMap="FrontUser">
+        select user_id,ehd,flow_ehd,lock_ehd,user_pid,user_level,children_ids,children_ids_all from front_user where children_ids != '' and ehd >= 10 ORDER BY user_id desc limit #{settlePage},1000
+    </select>
+    <select id="searchUserForReward" resultMap="FrontUser">
+        select user_id,ehd,flow_ehd,static_ehd,lock_ehd,user_pid,children_ids from front_user where ehd >= 10 ORDER BY user_id  limit #{rewardPage},1000
+    </select>
+    <select id="searchUserForStaticSettle" resultMap="FrontUser">
+        select user_id,ehd,flow_ehd,lock_ehd,user_pid,children_ids from front_user where ehd >= 10 ORDER BY user_id desc limit #{settlePage},1000
+    </select>
+    <select id="getUserByPid" resultMap="FrontUser">
+		SELECT user_id,ehd,lock_ehd,static_ehd,flow_ehd,user_pid  FROM `front_user` where ehd >=10 and user_pid = #{pid}
+	</select>
+    <select id="getFrontUserList" resultMap="FrontUser" >
+        select user_id,mobile,user_phone,ehd,lock_ehd,flow_ehd,reg_time,user_state,ehd_wallet from front_user where user_state='Y'
+
+        limit #{rowBounds},#{pageSize}
+    </select>
+    <update id="updateStaticEhd" parameterType="java.util.List">
+        update front_user
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="static_ehd=case" suffix="end,">
+                <foreach collection="ehdList" item="item" index="index">
+                    <if test="item.staEhd!=null">
+                        when user_id=#{item.userId} then #{item.staEhd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="today_priot =case" suffix="end,">
+                <foreach collection="ehdList" item="item" index="index">
+                    <if test="item.todayPriot!=null">
+                        when user_id=#{item.userId} then #{item.todayPriot}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="days =case" suffix="end,">
+                <foreach collection="ehdList" item="item" index="index">
+                        when user_id=#{item.userId} then days+1
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="ehdList" separator="or" item="item" index="index">
+            user_id=#{item.userId}
+        </foreach>
+    </update>
+    <select id="sumStaticByChilchenIds" resultType="BigDecimal">
+        select sum(static_ehd) from front_user where user_id in (<foreach collection="chiIds" item="emp" separator="," index="index">replace(#{emp},' ','')</foreach>)
+    </select>
+
+    <update id="updateLockehd" parameterType="java.util.List">
+        update front_user
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="lock_ehd=case" suffix="end,">
+                <foreach collection="ehdList" item="item" index="index">
+                    <if test="item.lockEhd!=null">
+                        when user_id=#{item.userId} then lock_ehd+#{item.lockEhd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="today_priot =case" suffix="end,">
+                <foreach collection="ehdList" item="item" index="index">
+                    <if test="item.lockEhd!=null">
+                        when user_id=#{item.userId} then today_priot+#{item.lockEhd}
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="ehdList" separator="or" item="item" index="index">
+            user_id=#{item.userId}
+        </foreach>
+    </update>
+    <select id="getFrontUserByUserIdForReward" resultMap="FrontUser">
+        select user_id,ehd,flow_ehd,static_ehd,lock_ehd,user_pid,children_ids from front_user where user_id = #{userId}
+    </select>
+    <select id="getChiIds" resultMap="FrontUser">
+        select id as user_id,children_ids_all from ehd_user where children_ids_all != 'null'
+    </select>
+    <update id="createChiIds">
+        update front_user set children_ids_all = #{ChiIds} where user_id = #{userId}
+    </update>
+    <select id="searchUserForFreeReward" resultMap="FrontUser">
+        select  user_id,flow_ehd,static_ehd,lock_ehd,zhitui_num from front_user where ehd >=10  limit #{freeRewardPage},1000
+    </select>
+    <update id="freeReward" parameterType="java.util.List">
+        update front_user
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="flow_ehd=case" suffix="end,">
+                <foreach collection="freeEhdList" item="item" index="index">
+                    <if test="item.flowEhd!=null">
+                        when user_id=#{item.userId} then flow_ehd+#{item.flowEhd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="lock_ehd =case" suffix="end,">
+                <foreach collection="freeEhdList" item="item" index="index">
+                    <if test="item.lockEhd!=null">
+                        when user_id=#{item.userId} then #{item.lockEhd}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="static_ehd =case" suffix="end,">
+                <foreach collection="freeEhdList" item="item" index="index">
+                    <if test="item.staticEhd!=null">
+                        when user_id=#{item.userId} then 0
+                    </if>
+                </foreach>
+            </trim>
+        </trim>
+        where
+        <foreach collection="freeEhdList" separator="or" item="item" index="index">
+            user_id=#{item.userId}
+        </foreach>
+    </update>
+
+</mapper>

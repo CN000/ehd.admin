@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ehd.admin.withdraw.mapper.WithdrawMapper" >
+    <resultMap id="Withdraw" type="com.ehd.admin.withdraw.domain.Withdraw">
+        <id property="cashId" column="cash_id"/>
+        <result property="cashUser" column="cash_user" />
+        <result property="cashNum" column="cash_num" />
+        <result property="cashTime" column="cash_time" />
+        <result property="cashStatus" column="cash_status" />
+        <result property="cashRate" column="cash_rate" />
+        <result property="cashCharge" column="cash_charge" />
+        <result property="cardType" column="card_type" />
+        <result property="cardDel" column="card_del" />
+        <result property="ethAddress" column="eth_address" />
+        <result property="thHash" column="th_hash" />
+        <result property="orderId" column="order_id" />
+    </resultMap>
+    <select id="getWithdrawList" resultMap="Withdraw">
+        SELECT (cash_num*0.95) as cash_num,cash_time,cash_status,eth_address,cash_user,cash_id   FROM  y_yikra_cash where cash_status = 0
+    </select>
+    <select id="getWithdrawById" resultMap="Withdraw">
+        select * from y_yikra_cash where cash_id = #{cashId}
+    </select>
+    <update id="notifyStatus">
+        update y_yikra_cash set cash_status = #{status} where cash_id = #{cashId}
+    </update>
+</mapper>

@@ -1,0 +1,35 @@
+server:
+ port: 8081
+spring:
+  datasource:
+    name: ehd
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      filters: stat
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://127.0.0.1:3306/ehd_test?characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+#      url: jdbc:mysql://db-ehd-20191114.cetnqetb6xbk.ap-northeast-2.rds.amazonaws.com:3306/beta_ehdmain_io?characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
+#      username: root_nibiru
+#      password: D!73I#22237!85qrRU
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: true
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
+  type-aliases-package: com.ehd.admin.*.domain
+
+
+#mybatis-plus mapper xml 文件地址
+logging:
+  config: classpath:logback-spring.xml
